@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>  
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Beam\Assets\NotUnitySpecific\GameModeMgr\GameModeMgr.csproj" />  
+    <ProjectReference Include="..\Beam\Assets\NotUnitySpecific\BeamBackend\BeamBackend.csproj" />
+    <ProjectReference Include="..\Beam\Assets\NotUnitySpecific\BikeControl\BikeControl.csproj" />    
+    <ProjectReference Include="..\UnityEngine\UnityEngine.csproj" />    
+  </ItemGroup>
+
+</Project>
