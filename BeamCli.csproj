@@ -8,9 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Beam\Assets\NotUnitySpecific\GameModeMgr\GameModeMgr.csproj" />  
-    <ProjectReference Include="..\Beam\Assets\NotUnitySpecific\BeamBackend\BeamBackend.csproj" />
-    <ProjectReference Include="..\Beam\Assets\NotUnitySpecific\BikeControl\BikeControl.csproj" />    
+    <ProjectReference Include="..\GameModeMgr\GameModeMgr.csproj" />  
+    <ProjectReference Include="..\BeamBikeControl\BeamBikeControl.csproj" />    
     <ProjectReference Include="..\UnityEngine\UnityEngine.csproj" />    
   </ItemGroup>
 

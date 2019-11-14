@@ -1,0 +1,3 @@
+[submodule "BeamBackend"]
+	path = BeamBackend
+	url = git@github.com:jimkberry/BeamBackend.git
