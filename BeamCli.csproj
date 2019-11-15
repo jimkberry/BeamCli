@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GameModeMgr\GameModeMgr.csproj" />  
     <ProjectReference Include="..\BeamBikeControl\BeamBikeControl.csproj" />    
-    <ProjectReference Include="..\UnityEngine\UnityEngine.csproj" />    
+    <ProjectReference Include="..\NotUnityEngine\UnityEngine.csproj" />    
   </ItemGroup>
 
 </Project>
