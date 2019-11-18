@@ -1,9 +1,9 @@
-#!/bin/bash -f
-( cd ..
-(cd BeamCli; git pull;)
-(cd BeamBikeControl; git pull;)
-(cd BeamCli; git pull;)
-(cd GameModeMgr; git pull;)
-(cd NotUnityEngine; git pull;)
-(cd P2pNet; git pull;)
-)
+#!/bin/bash
+cd ..
+cd BeamBackend; git pull; cd ..
+cd BeamBikeControl; git pull; cd ..
+cd BeamCli; git pull; cd ..
+cd GameModeMgr; git pull; cd ..
+cd NotUnityEngine; git pull; cd ..
+cd P2pNet; git pull; cd ..
+cd P2pNet.Test; git pull; cd ..
