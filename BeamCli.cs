@@ -2,7 +2,7 @@
 using System.Threading;
 using BeamBackend;
 
-namespace BeamCli 
+namespace BeamCli
 {
     class Program
     {
@@ -15,7 +15,7 @@ namespace BeamCli
 
 
     class CliDriver
-    { 
+    {
         public long targetFrameMs {get; private set;} = 60;
 
         public BeamGameInstance gameInst = null;
@@ -30,7 +30,8 @@ namespace BeamCli
         protected void Init()
         {
             fe = new BeamCliFrontend();
-            gameInst = new BeamGameInstance(fe);
+            gameInst = new BeamGameInstance(fe,
+                new BeamGameInstance.BeamGameConfig(){startMode= BeamModeFactory.kConnect});
             fe.SetBackendWeakRef(gameInst);
             gameInst.Start();
         }
@@ -38,7 +39,7 @@ namespace BeamCli
         protected void LoopUntilDone()
         {
             bool keepRunning = true;
-            long frameStartMs = _TimeMs() - targetFrameMs;;              
+            long frameStartMs = _TimeMs() - targetFrameMs;;
             while (keepRunning)
             {
                 long prevFrameStartMs = frameStartMs;
@@ -64,18 +65,18 @@ namespace BeamCli
             //     cmd = self.netCmdQueue.get(block=False)
             //     if cmd:
             //         self._dispatch_net_cmd(cmd)
-            //         ge_sleep(0)  # yield         
+            //         ge_sleep(0)  # yield
 
 
             // while not self.feMsgQueue.empty():
             //     cmd = self.feMsgQueue.get(block=False)
             //     if cmd:
             //         self._dispatch_fe_cmd(cmd)
-            //         ge_sleep(0)  # yield                           
+            //         ge_sleep(0)  # yield
 
             // then update the game
 
-            float frameSecs = (float)frameMs / 1000f;    
+            float frameSecs = (float)frameMs / 1000f;
             fe.Loop(frameSecs);
             return gameInst.Loop(frameSecs);
         }
