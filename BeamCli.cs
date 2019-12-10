@@ -1,15 +1,44 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
+using CommandLine;
 using BeamBackend;
+using GameNet;
+using P2pNet;
 
 namespace BeamCli 
 {
     class Program
     {
+        public class CliOptions
+        {
+            [Option(
+	            Default = null,
+	            HelpText = "If set, join this game, if null, create a game")]            
+            public string GameId {get; set;}
+        }
+
+        protected static BeamUserSettings GetSettings(string[] args)
+        {
+            BeamUserSettings settings = BeamUserSettings.CreateDefault();
+
+            Parser.Default.ParseArguments<CliOptions>(args)
+                   .WithParsed<CliOptions>(o =>
+                   {
+                       if (o.GameId != null)
+                        settings.gameId = o.GameId;    
+                   });
+
+            return settings;
+        }
+
         static void Main(string[] args)
         {
+            P2pNetTrace.InitInCode(TraceLevel.Verbose);
+            GameNetTrace.InitInCode(TraceLevel.Verbose);
+
             CliDriver drv = new CliDriver();
-            drv.Run();
+            drv.Run(GetSettings(args));
         }
     }
 
@@ -20,19 +49,22 @@ namespace BeamCli
 
         public BeamGameInstance gameInst = null;
         public BeamCliFrontend fe = null;
+        public BeamGameNet bgn = null;
 
-        public void Run() {
+        public void Run(BeamUserSettings settings) {
             UnityEngine.Debug.Log("Starting");
-            Init();
+            Init(settings);
             LoopUntilDone();
         }
 
-        protected void Init()
+        protected void Init(BeamUserSettings settings)
         {
-            fe = new BeamCliFrontend();
-            gameInst = new BeamGameInstance(fe);
+            fe = new BeamCliFrontend(settings);
+            bgn = new BeamGameNet(); // TODO: config/settings?            
+            gameInst = new BeamGameInstance(fe, bgn);
+            bgn.Init(gameInst); // weakref
             fe.SetBackendWeakRef(gameInst);
-            gameInst.Start();
+            gameInst.Start(BeamModeFactory.kConnect);
         }
 
         protected void LoopUntilDone()
@@ -76,6 +108,7 @@ namespace BeamCli
             // then update the game
 
             float frameSecs = (float)frameMs / 1000f;    
+            bgn.Loop();
             fe.Loop(frameSecs);
             return gameInst.Loop(frameSecs);
         }

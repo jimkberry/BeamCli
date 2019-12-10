@@ -28,9 +28,9 @@ namespace BeamCli
         public BeamCliModeHelper() 
         {
             _modeFuncs = new Dictionary<int, ModeFuncs>()
-            {
-                { BeamModeFactory.kStartup, new StartupModeFuncs()},            
+            {           
                 { BeamModeFactory.kSplash, new SplashModeFuncs()},
+                { BeamModeFactory.kConnect, new ConnectModeFuncs()},                 
                 { BeamModeFactory.kPlay, new PlayModeFuncs()}            
             };
         }
@@ -49,12 +49,6 @@ namespace BeamCli
         }
 
         // Implementations
-        class StartupModeFuncs : ModeFuncs
-        {
-            public StartupModeFuncs() : base() {}
-            public override void OnStart(object parms=null) {}      
-            public override void OnEnd(object parms=null) {}       
-        }    
         class SplashModeFuncs : ModeFuncs
         {
             public SplashModeFuncs() : base()
@@ -72,13 +66,15 @@ namespace BeamCli
                 TargetIdParams p = (TargetIdParams)parms;
             }
         
-            public override void OnEnd(object parms=null)
-            {
-
-            }       
-
-        
+            public override void OnEnd(object parms=null) {}       
         }
+
+        class ConnectModeFuncs : ModeFuncs
+        {
+            public ConnectModeFuncs() : base() {}
+            public override void OnStart(object parms=null) {}      
+            public override void OnEnd(object parms=null) {}       
+        }            
 
         class PlayModeFuncs : ModeFuncs
         {

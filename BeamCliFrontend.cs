@@ -17,12 +17,15 @@ namespace BeamCli
         public WeakReference backend;
         protected BeamCliModeHelper feModeHelper;
 
+        protected BeamUserSettings userSettings;
+
 
         // Start is called before the first frame update
-        public BeamCliFrontend()
+        public BeamCliFrontend(BeamUserSettings startupSettings)
         {
             feModeHelper = new BeamCliModeHelper();
             feBikes = new Dictionary<string, FrontendBike>();
+            userSettings = startupSettings;
         }
 
         public void SetBackendWeakRef(IBeamBackend back)
@@ -41,6 +44,7 @@ namespace BeamCli
         //
         // IBeamFrontend API
         //   
+        public BeamUserSettings GetUserSettings() => userSettings;
 
         // Backend game modes
         public IFrontendModeHelper ModeHelper() => (IFrontendModeHelper)feModeHelper;
