@@ -11,6 +11,7 @@
     <ProjectReference Include="..\GameModeMgr\GameModeMgr.csproj" />  
     <ProjectReference Include="..\BeamBikeControl\BeamBikeControl.csproj" />    
     <ProjectReference Include="..\NotUnityEngine\UnityEngine.csproj" />    
+    <ProjectReference Include="..\UniLog\UniLog.csproj" />    
   </ItemGroup>
 
   <ItemGroup>

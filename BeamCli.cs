@@ -5,6 +5,7 @@ using CommandLine;
 using BeamBackend;
 using GameNet;
 using P2pNet;
+using UniLog;
 
 namespace BeamCli 
 {
@@ -33,9 +34,10 @@ namespace BeamCli
         }
 
         static void Main(string[] args)
-        {
-            P2pNetTrace.InitInCode(TraceLevel.Verbose);
-            GameNetTrace.InitInCode(TraceLevel.Verbose);
+        {          
+            UniLogger.GetLogger("P2pNet", UniLogger.Level.Debug);    
+            UniLogger.GetLogger("GameNet", UniLogger.Level.Debug);    
+            UniLogger.GetLogger("GameInstance", UniLogger.Level.Debug);
 
             CliDriver drv = new CliDriver();
             drv.Run(GetSettings(args));
@@ -52,7 +54,6 @@ namespace BeamCli
         public BeamGameNet bgn = null;
 
         public void Run(BeamUserSettings settings) {
-            UnityEngine.Debug.Log("Starting");
             Init(settings);
             LoopUntilDone();
         }
@@ -62,7 +63,7 @@ namespace BeamCli
             fe = new BeamCliFrontend(settings);
             bgn = new BeamGameNet(); // TODO: config/settings?            
             gameInst = new BeamGameInstance(fe, bgn);
-            bgn.Init(gameInst); // weakref
+            bgn.Init(gameInst); 
             fe.SetBackendWeakRef(gameInst);
             gameInst.Start(BeamModeFactory.kConnect);
         }
