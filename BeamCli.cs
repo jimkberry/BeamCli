@@ -35,9 +35,9 @@ namespace BeamCli
 
         static void Main(string[] args)
         {          
-            UniLogger.GetLogger("P2pNet", UniLogger.Level.Debug);    
-            UniLogger.GetLogger("GameNet", UniLogger.Level.Debug);    
-            UniLogger.GetLogger("GameInstance", UniLogger.Level.Debug);
+            UniLogger.GetLogger("P2pNet").LogLevel = UniLogger.Level.Debug;    
+            UniLogger.GetLogger("GameNet").LogLevel = UniLogger.Level.Debug;
+            UniLogger.GetLogger("GameInstance").LogLevel = UniLogger.Level.Debug;
 
             CliDriver drv = new CliDriver();
             drv.Run(GetSettings(args));
