@@ -5,7 +5,7 @@ using BikeControl;
 
 namespace BeamCli
 {
-    public static class BikeFactory
+    public static class FeBikeFactory
     {
         public static FrontendBike Create(IBike ib)
         {

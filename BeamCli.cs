@@ -15,32 +15,47 @@ namespace BeamCli
         {
             [Option(
 	            Default = null,
-	            HelpText = "If set, join this game, if null, create a game")]            
-            public string GameId {get; set;}
+	            HelpText = "(not persistent) Join this game. Else create a game")]            
+            public string GameId {get; set;}  
+
+            [Option(
+	            Default = -1,
+	            HelpText = "(persistent) Start with this GameMode")]            
+            public int StartMode {get; set;}  
+
+            [Option(
+	            Default = false,
+	            HelpText = "Force default user settings (other than CLI options")]            
+            public bool ForceDefaultSettings {get; set;}                   
         }
 
         protected static BeamUserSettings GetSettings(string[] args)
         {
-            BeamUserSettings settings = BeamUserSettings.CreateDefault();
+            BeamUserSettings settings = UserSettingsMgr.Load();
 
             Parser.Default.ParseArguments<CliOptions>(args)
-                   .WithParsed<CliOptions>(o =>
-                   {
-                       if (o.GameId != null)
-                        settings.gameId = o.GameId;    
-                   });
+                    .WithParsed<CliOptions>(o =>
+                    {
+                        if (o.ForceDefaultSettings)
+                            settings = BeamUserSettings.CreateDefault();
 
+                        if (o.GameId != null)
+                            settings.tempSettings["gameId"] = o.GameId;  
+
+                       if (o.StartMode != -1)
+                            settings.startMode = o.StartMode;                              
+                    });
+
+            UserSettingsMgr.Save(settings);
             return settings;
         }
 
         static void Main(string[] args)
         {          
-            UniLogger.GetLogger("P2pNet").LogLevel = UniLogger.Level.Debug;    
-            UniLogger.GetLogger("GameNet").LogLevel = UniLogger.Level.Debug;
-            UniLogger.GetLogger("GameInstance").LogLevel = UniLogger.Level.Debug;
-
+            BeamUserSettings settings = GetSettings(args);
+            UniLogger.SetupLevels(settings.debugLevels);
             CliDriver drv = new CliDriver();
-            drv.Run(GetSettings(args));
+            drv.Run(settings);
         }
     }
 
@@ -65,7 +80,7 @@ namespace BeamCli
             gameInst = new BeamGameInstance(fe, bgn);
             bgn.Init(gameInst); 
             fe.SetBackendWeakRef(gameInst);
-            gameInst.Start(BeamModeFactory.kConnect);
+            gameInst.Start(settings.startMode);
         }
 
         protected void LoopUntilDone()
