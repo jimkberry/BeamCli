@@ -54,14 +54,20 @@ namespace BeamCli
         public IFrontendModeHelper ModeHelper() => (IFrontendModeHelper)feModeHelper;
 
         // Players
-        public void OnNewPlayer(Player p)
+        public void OnNewPeer(BeamPeer p)
         {
-            logger.Info("FE.OnNewPlayer() currently does nothing");
+            Console.WriteLine($"New Peer: {p.Name}, Id: {p.PeerId}");
         }
 
-        public void OnClearPlayers()
+        public void OnPeerLeft(BeamPeer p)
         {
-            logger.Info("OnClearPlayers() currently does nothing");
+            Console.WriteLine("Peer Left: {p.name}, Id: {{p.peerId}");            
+        }
+
+        public void OnClearPeers()
+        {
+            // Probably never will do anything
+            logger.Info("OnClearPeers() currently does nothing");
         }
 
         // Bikes
