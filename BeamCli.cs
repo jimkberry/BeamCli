@@ -26,7 +26,12 @@ namespace BeamCli
             [Option(
 	            Default = false,
 	            HelpText = "Force default user settings (other than CLI options")]            
-            public bool ForceDefaultSettings {get; set;}                   
+            public bool ForceDefaultSettings {get; set;}     
+
+            [Option(
+	            Default = false,
+	            HelpText = "Raise exception on Unilog error")]            
+            public bool ThrowOnError {get; set;}                                   
         }
 
         protected static BeamUserSettings GetSettings(string[] args)
@@ -38,6 +43,9 @@ namespace BeamCli
                     {
                         if (o.ForceDefaultSettings)
                             settings = BeamUserSettings.CreateDefault();
+
+                        if (o.ThrowOnError)
+                            UniLogger.defaultThrowOnError = true;
 
                         if (o.GameId != null)
                             settings.tempSettings["gameId"] = o.GameId;  
