@@ -24,6 +24,11 @@ namespace BeamCli
             public int StartMode {get; set;}  
 
             [Option(
+	            Default = null,
+	            HelpText = "User settings basename (Default: beamsettings)")]            
+            public string Settings {get; set;}  
+
+            [Option(
 	            Default = false,
 	            HelpText = "Force default user settings (other than CLI options")]            
             public bool ForceDefaultSettings {get; set;}     
@@ -41,6 +46,9 @@ namespace BeamCli
             Parser.Default.ParseArguments<CliOptions>(args)
                     .WithParsed<CliOptions>(o =>
                     {
+                        if (o.Settings != null)
+                            settings = UserSettingsMgr.Load(o.Settings);
+
                         if (o.ForceDefaultSettings)
                             settings = BeamUserSettings.CreateDefault();
 
