@@ -13,15 +13,11 @@ namespace BeamCli
     
     public class BeamCliFrontend : IBeamFrontend
     {
-        public  Dictionary<string, FrontendBike> feBikes;
-        
+        public  Dictionary<string, FrontendBike> feBikes; 
         public WeakReference backend;
         protected BeamCliModeHelper feModeHelper;
-
         protected BeamUserSettings userSettings;
-
         public UniLogger logger;
-
 
         // Start is called before the first frame update
         public BeamCliFrontend(BeamUserSettings startupSettings)
@@ -37,7 +33,7 @@ namespace BeamCli
             backend = new WeakReference(back);
         }
     
-        public void Loop(float frameSecs)
+        public virtual void Loop(float frameSecs)
         {
             foreach( FrontendBike bike in feBikes.Values)
             {
@@ -100,13 +96,32 @@ namespace BeamCli
         {         
             logger.Debug(string.Format("FE.SetupPlaceMarker({0},{1})", p.xIdx, p.zIdx));     
         }
+
         public void OnFreePlace(Ground.Place p)
         {
             logger.Debug(string.Format("FE.OnFreePlace({0},{1})", p.xIdx, p.zIdx));                  
-        }        
+        }   
+
         public void OnClearPlaces()
         {
            logger.Info($"OnClearPlaces()");
+        }
+
+    }
+
+    public class IntBeamCliFrontend : BeamCliFrontend
+    {
+        public IntBeamCliFrontend(BeamUserSettings startupSettings) : base(startupSettings)
+        {
+            feModeHelper = new BeamCliModeHelper();
+            feBikes = new Dictionary<string, FrontendBike>();
+            userSettings = startupSettings;
+            logger = UniLogger.GetLogger("Frontend");
+        }
+
+        public override void Loop(float frameSecs)
+        {
+            base.Loop(frameSecs);
         }
 
     }

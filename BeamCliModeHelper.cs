@@ -21,8 +21,6 @@ namespace BeamCli
             }       
         }
 
-
-
         protected Dictionary<int, ModeFuncs> _modeFuncs;
 
         public BeamCliModeHelper() 
