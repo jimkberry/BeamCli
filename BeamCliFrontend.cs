@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System;
 using System.Runtime.CompilerServices;
 using System.Collections;
@@ -14,7 +15,7 @@ namespace BeamCli
     public class BeamCliFrontend : IBeamFrontend
     {
         public  Dictionary<string, FrontendBike> feBikes; 
-        public WeakReference backend;
+        public IBeamBackend backend;
         protected BeamCliModeHelper _feModeHelper;
         protected BeamUserSettings userSettings;
         public UniLogger logger;
@@ -28,9 +29,20 @@ namespace BeamCli
             logger = UniLogger.GetLogger("Frontend");
         }
 
-        public void SetBackendWeakRef(IBeamBackend back)
+        public void SetBackend(IBeamBackend back)
         {
-            backend = new WeakReference(back);
+            backend = back;
+            back.PeerJoinedEvt += OnPeerJoinedEvt;
+            back.PeerLeftEvt += OnPeerLeftEvt;            
+            back.PeersClearedEvt += OnPeersClearedEvt;   
+            back.NewBikeEvt += OnNewBikeEvt;   
+            back.BikeRemovedEvt += OnBikeRemovedEvt;   
+            back.BikesClearedEvt +=OnBikesClearedEvt;   
+            back.PlaceClaimedEvt += OnPlaceClaimedEvt;
+            back.PlaceHitEvt += OnPlaceHitEvt;
+            back.GetGround().PlaceFreedEvt += OnPlaceFreedEvt;
+            back.GetGround().PlacesClearedEvt += OnPlacesClearedEvt; 
+            back.GetGround().SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;                         
         }
     
         public virtual void Loop(float frameSecs)
@@ -51,61 +63,68 @@ namespace BeamCli
         public void OnEndMode(int modeId, object param) => _feModeHelper.OnEndMode(modeId, param);
         
         // Players
-        public void OnNewPeer(BeamPeer p, int modeId)
+        public void OnPeerJoinedEvt(object sender, BeamPeer p)
         {
-            Console.WriteLine($"New Peer: {p.Name}, Id: {p.PeerId}");
+            logger.Info($"OnPeerJoinedEvt() name: {p.Name}, Id: {p.PeerId}");
         }
 
-        public void OnPeerLeft(string p2pId, int modeId) 
+        public void OnPeerLeftEvt(object sender, string p2pId) 
         {
-            logger.Info("Peer Left: {p2pId}");            
+            logger.Info($"OnPeerLeftEvt(): {p2pId}");            
         }
 
-        public void OnClearPeers(int modeId)
+        public void OnPeersClearedEvt(object sender, EventArgs e)
         {
             // Probably never will do anything
             logger.Info("OnClearPeers() currently does nothing");
         }
 
         // Bikes
-        public void OnNewBike(IBike ib, int modeId)
+        public void OnNewBikeEvt(object sender, IBike ib)
         {
-            logger.Info($"FE.OnNewBike(). Id: {ib.bikeId}, LocalPlayer: {ib.ctrlType == BikeFactory.LocalPlayerCtrl}"); 
+            logger.Info($"OnNewBikeEvt(). Id: {ib.bikeId}, LocalPlayer: {ib.ctrlType == BikeFactory.LocalPlayerCtrl}"); 
             FrontendBike b = FeBikeFactory.Create(ib);
-            b.Setup(ib, backend.Target as IBeamBackend);
+            b.Setup(ib, backend);
             feBikes[ib.bikeId] = b;
         }
-        public void OnBikeRemoved(string bikeId, bool doExplode, int modeId)
+        public void OnBikeRemovedEvt(object sender, BikeRemovedData rData)
         {
-            logger.Info(string.Format("FE.OnBikeRemoved({0}). Id: {1}", doExplode ? "Boom!" : "", bikeId));   
-            feBikes.Remove(bikeId);                        
+            logger.Info(string.Format("OnBikeRemovedEvt({0}). Id: {1}", rData.doExplode ? "Boom!" : "", rData.bikeId));   
+            feBikes.Remove(rData.bikeId);                        
         }  
-        public void OnClearBikes(int modeId)
+        public void OnBikesClearedEvt(object sender, EventArgs e)
         {
-            logger.Info(string.Format("FE.OnClearBikes()"));      
+            logger.Info(string.Format("OnBikesClearedEvt()"));      
 		    feBikes.Clear();              
         }    
 
-        public void OnBikeAtPlace(string bikeId, Ground.Place place, bool justClaimed, int modeId)
+
+        // Places
+        
+        public void OnPlaceHitEvt(object sender, PlaceHitArgs args)        
         {        
-            if (place != null)
-                logger.Debug(string.Format("FE.OnBikeAtPlace({0},{1})", place.xIdx, place.zIdx));        
+            logger.Info($"OnPlaceHitEvt. Place: ({args.p.xIdx}, {args.p.zIdx})  Bike: {args.ib.bikeId}");        
         }    
 
-        // Ground
-        public void SetupPlaceMarker(Ground.Place p, int modeId)
+        public void OnPlaceClaimedEvt(object sender, Ground.Place p)        
         {         
-            logger.Debug(string.Format("FE.SetupPlaceMarker({0},{1})", p.xIdx, p.zIdx));     
+            logger.Debug($"OnPlaceClaimedEvt. Pos: ({p.xIdx}, {p.zIdx})  Bike: {p.bike.bikeId}");     
         }
 
-        public void OnFreePlace(Ground.Place p, int modeId)
+        // Ground
+        public void OnSetupPlaceMarkerEvt(object sender, Ground.Place p)
         {
-            logger.Debug(string.Format("FE.OnFreePlace({0},{1})", p.xIdx, p.zIdx));                  
+            logger.Debug($"OnSetupPlaceMarkerEvt({p.xIdx}, {p.zIdx})"); 
+        }
+
+        public void OnPlaceFreedEvt(object sender, Ground.Place p)
+        {
+            logger.Debug($"OnFreePlace({p.xIdx}, {p.zIdx})");                  
         }   
 
-        public void OnClearPlaces(int modeId)
+        public void OnPlacesClearedEvt(object sender, EventArgs e)
         {
-           logger.Info($"OnClearPlaces()");
+           logger.Debug($"OnClearPlaces()");
         }
 
     }

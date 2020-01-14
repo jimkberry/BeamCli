@@ -95,7 +95,7 @@ namespace BeamCli
             bgn = new BeamGameNet(); // TODO: config/settings?            
             gameInst = new BeamGameInstance(fe, bgn);
             bgn.Init(gameInst); 
-            fe.SetBackendWeakRef(gameInst);
+            fe.SetBackend(gameInst);
             gameInst.Start(settings.startMode);
         }
 
