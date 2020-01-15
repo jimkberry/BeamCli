@@ -23,7 +23,7 @@ namespace BeamCli
         // Start is called before the first frame update
         public BeamCliFrontend(BeamUserSettings startupSettings)
         {
-            _feModeHelper = new BeamCliModeHelper();
+            _feModeHelper = new BeamCliModeHelper(this);
             feBikes = new Dictionary<string, FrontendBike>();
             userSettings = startupSettings;
             logger = UniLogger.GetLogger("Frontend");
@@ -40,6 +40,10 @@ namespace BeamCli
             back.BikesClearedEvt +=OnBikesClearedEvt;   
             back.PlaceClaimedEvt += OnPlaceClaimedEvt;
             back.PlaceHitEvt += OnPlaceHitEvt;
+
+            back.ReadyToPlayEvt += OnReadyToPlay;
+
+            // TODO: Maybe move these to IBackend and add a Raise[Foo]Evt method?
             back.GetGround().PlaceFreedEvt += OnPlaceFreedEvt;
             back.GetGround().PlacesClearedEvt += OnPlacesClearedEvt; 
             back.GetGround().SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;                         
@@ -127,16 +131,19 @@ namespace BeamCli
            logger.Debug($"OnClearPlaces()");
         }
 
+        public void OnReadyToPlay(object sender, EventArgs e)
+        {
+           logger.Info($"OnReadyToPlay()");    
+           backend.OnSwitchModeReq(BeamModeFactory.kPlay, null);        
+        }
+
     }
 
     public class IntBeamCliFrontend : BeamCliFrontend
     {
         public IntBeamCliFrontend(BeamUserSettings startupSettings) : base(startupSettings)
         {
-            _feModeHelper = new BeamCliModeHelper();
-            feBikes = new Dictionary<string, FrontendBike>();
-            userSettings = startupSettings;
-            logger = UniLogger.GetLogger("Frontend");
+
         }
 
         public override void Loop(float frameSecs)

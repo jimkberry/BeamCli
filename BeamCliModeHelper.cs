@@ -22,9 +22,11 @@ namespace BeamCli
         }
 
         protected Dictionary<int, ModeFuncs> _modeFuncs;
+        public IBeamFrontend fe;
 
-        public BeamCliModeHelper() 
+        public BeamCliModeHelper(IBeamFrontend _fe) 
         {
+            fe = _fe;
             _modeFuncs = new Dictionary<int, ModeFuncs>()
             {           
                 { BeamModeFactory.kSplash, new SplashModeFuncs()},
@@ -70,7 +72,10 @@ namespace BeamCli
         class ConnectModeFuncs : ModeFuncs
         {
             public ConnectModeFuncs() : base() {}
-            public override void OnStart(object parms=null) {}      
+            public override void OnStart(object parms=null) 
+            {
+
+            }      
             public override void OnEnd(object parms=null) {}       
         }            
 

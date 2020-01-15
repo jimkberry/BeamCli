@@ -15,13 +15,18 @@ namespace BeamCli
         {
             [Option(
 	            Default = null,
-	            HelpText = "(not persistent) Join this game. Else create a game")]            
+	            HelpText = "Join this game. Else create a game")]            
             public string GameId {get; set;}  
 
             [Option(
 	            Default = -1,
 	            HelpText = "(persistent) Start with this GameMode")]            
             public int StartMode {get; set;}  
+
+            [Option(
+	            Default = BikeFactory.AiCtrl,
+	            HelpText = "Local Bike Control Type (0=player, 1=AI)")]            
+            public int BikeCtrl {get; set;}
 
             [Option(
 	            Default = null,
@@ -59,7 +64,12 @@ namespace BeamCli
                             settings.tempSettings["gameId"] = o.GameId;  
 
                        if (o.StartMode != -1)
-                            settings.startMode = o.StartMode;                              
+                            settings.startMode = o.StartMode;       
+
+                        // TODO: would rather have the frontend implmentation determine this somehow
+                        if (o.BikeCtrl != -1)
+                            settings.localPlayerCtrlType = o.BikeCtrl;
+
                     });
 
             UserSettingsMgr.Save(settings);
