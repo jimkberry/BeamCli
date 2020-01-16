@@ -88,7 +88,7 @@ namespace BeamCli
 
     class CliDriver
     { 
-        public long targetFrameMs {get; private set;} = 60;
+        public long targetFrameMs {get; private set;} = 16;
 
         public BeamGameInstance gameInst = null;
         public BeamCliFrontend fe = null;
