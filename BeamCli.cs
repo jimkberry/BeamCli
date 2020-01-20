@@ -3,8 +3,6 @@ using System.Diagnostics;
 using System.Threading;
 using CommandLine;
 using BeamBackend;
-using GameNet;
-using P2pNet;
 using UniLog;
 
 namespace BeamCli 
