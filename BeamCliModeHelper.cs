@@ -31,7 +31,8 @@ namespace BeamCli
             {           
                 { BeamModeFactory.kSplash, new SplashModeFuncs()},
                 { BeamModeFactory.kConnect, new ConnectModeFuncs()},                 
-                { BeamModeFactory.kPlay, new PlayModeFuncs()}            
+                { BeamModeFactory.kPlay, new PlayModeFuncs()},            
+                { BeamModeFactory.kPractice, new PracticeModeFuncs()}                 
             };
         }
 
@@ -81,27 +82,22 @@ namespace BeamCli
 
         class PlayModeFuncs : ModeFuncs
         {
-            public PlayModeFuncs() : base()
-            {
-    //           _cmdDispatch[ModeSplash.kCmdTargetCamera] = new Action<object>(o => TargetCamera(o));            
-            }
-
-            // protected void TargetCamera(ModeSplash.TargetIdParams parm)
-            // {
-
-            // }
+            public PlayModeFuncs() : base() {}         
 
             public override void OnStart(object parms=null)
             {
                 TargetIdParams p = (TargetIdParams)parms;
             }
-        
             public override void OnEnd(object parms=null)
             {
 
-            }       
-    
-        }     
+            } 
+        }      
 
+        class PracticeModeFuncs : PlayModeFuncs
+        {
+            public PracticeModeFuncs() : base() {}             
+        }
     }
+
 }
