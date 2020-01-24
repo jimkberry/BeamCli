@@ -80,7 +80,7 @@ namespace BeamCli
         public void OnPeersClearedEvt(object sender, EventArgs e)
         {
             // Probably never will do anything
-            logger.Info("OnClearPeers() currently does nothing");
+            logger.Verbose("OnClearPeers() currently does nothing");
         }
 
         // Bikes
@@ -98,7 +98,7 @@ namespace BeamCli
         }  
         public void OnBikesClearedEvt(object sender, EventArgs e)
         {
-            logger.Info(string.Format("OnBikesClearedEvt()"));      
+            logger.Verbose(string.Format("OnBikesClearedEvt()"));      
 		    feBikes.Clear();              
         }    
 
@@ -112,7 +112,7 @@ namespace BeamCli
 
         public void OnPlaceClaimedEvt(object sender, Ground.Place p)        
         {         
-            logger.Debug($"OnPlaceClaimedEvt. Pos: ({p.xIdx}, {p.zIdx})  Bike: {p.bike.bikeId}");     
+            logger.Verbose($"OnPlaceClaimedEvt. Pos: ({p.xIdx}, {p.zIdx})  Bike: {p.bike.bikeId}");     
         }
 
         // Ground
