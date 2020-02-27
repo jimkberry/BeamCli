@@ -102,7 +102,8 @@ namespace BeamCli
             fe = new BeamCliFrontend(settings);
             bgn = new BeamGameNet(); // TODO: config/settings?            
             gameInst = new BeamGameInstance(fe, bgn);
-            bgn.Init(gameInst); 
+            BeamApian apian = new BeamApianTrusty(bgn, gameInst);
+            bgn.Init(apian); 
             fe.SetBackend(gameInst);
             gameInst.Start(settings.startMode);
         }
