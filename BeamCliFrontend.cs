@@ -16,6 +16,7 @@ namespace BeamCli
     {
         public  Dictionary<string, FrontendBike> feBikes; 
         public IBeamBackend backend;
+        public BeamGameInstance gameInst;
         protected BeamCliModeHelper _feModeHelper;
         protected BeamUserSettings userSettings;
         public UniLogger logger;
@@ -32,6 +33,7 @@ namespace BeamCli
         public void SetBackend(IBeamBackend back)
         {
             backend = back;
+            gameInst = back as BeamGameInstance;
             back.PeerJoinedEvt += OnPeerJoinedEvt;
             back.PeerLeftEvt += OnPeerLeftEvt;            
             back.PeersClearedEvt += OnPeersClearedEvt;   
@@ -86,7 +88,7 @@ namespace BeamCli
         // Bikes
         public void OnNewBikeEvt(object sender, IBike ib)
         {
-            logger.Info($"OnNewBikeEvt(). Id: {ib.bikeId}, LocalPlayer: {ib.ctrlType == BikeFactory.LocalPlayerCtrl}"); 
+            logger.Info($"OnNewBikeEvt(). Id: {ib.bikeId}, Local: {ib.peerId == gameInst.LocalPeerId}, AI: {ib.ctrlType == BikeFactory.AiCtrl}"); 
             FrontendBike b = FeBikeFactory.Create(ib);
             b.Setup(ib, backend);
             feBikes[ib.bikeId] = b;
