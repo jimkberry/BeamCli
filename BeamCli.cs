@@ -22,9 +22,9 @@ namespace BeamCli
             public int StartMode {get; set;}  
 
             [Option(
-	            Default = BikeFactory.AiCtrl,
-	            HelpText = "Local Bike Control Type (0=player, 1=AI)")]            
-            public int BikeCtrl {get; set;}
+	            Default = null,
+	            HelpText = "Local Bike Control Type (ai, player)")]            
+            public string BikeCtrl {get; set;}
 
             [Option(
 	            Default = null,
@@ -65,7 +65,7 @@ namespace BeamCli
                             settings.startMode = o.StartMode;       
 
                         // TODO: would rather have the frontend implmentation determine this somehow
-                        if (o.BikeCtrl != -1)
+                        if (o.BikeCtrl != null)
                             settings.localPlayerCtrlType = o.BikeCtrl;
 
                     });
