@@ -34,8 +34,8 @@ namespace BeamCli
         {
             backend = back;
             gameInst = back as BeamGameInstance;
-            back.PeerJoinedEvt += OnPeerJoinedEvt;
-            back.PeerLeftEvt += OnPeerLeftEvt;            
+            back.PeerJoinedGameEvt += OnPeerJoinedGameEvt;
+            back.PeerLeftGameEvt += OnPeerLeftGameEvt;            
             back.PeersClearedEvt += OnPeersClearedEvt;   
             back.NewBikeEvt += OnNewBikeEvt;   
             back.BikeRemovedEvt += OnBikeRemovedEvt;   
@@ -69,14 +69,15 @@ namespace BeamCli
         public void OnEndMode(int modeId, object param) => _feModeHelper.OnEndMode(modeId, param);
         
         // Players
-        public void OnPeerJoinedEvt(object sender, BeamPeer p)
+        public void OnPeerJoinedGameEvt(object sender, PeerJoinedGameArgs args)
         {
+            BeamPeer p = args.peer;
             logger.Info($"OnPeerJoinedEvt() name: {p.Name}, Id: {p.PeerId}");
         }
 
-        public void OnPeerLeftEvt(object sender, string p2pId) 
+        public void OnPeerLeftGameEvt(object sender, PeerLeftGameArgs args) 
         {
-            logger.Info($"OnPeerLeftEvt(): {p2pId}");            
+            logger.Info($"OnPeerLeftEvt(): {args.p2pId}");            
         }
 
         public void OnPeersClearedEvt(object sender, EventArgs e)
