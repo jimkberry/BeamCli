@@ -89,7 +89,7 @@ namespace BeamCli
         public long targetFrameMs {get; private set;} = 16;
 
         public BeamCore core = null;
-        public BeamGameInstance gameInst = null;
+
         public BeamCliFrontend fe = null;
         public BeamGameNet bgn = null;
 
@@ -102,12 +102,7 @@ namespace BeamCli
         {
             fe = new BeamCliFrontend(settings);
             bgn = new BeamGameNet(); // TODO: config/settings?
-            core = new BeamCore(bgn);
-            gameInst = new BeamGameInstance(fe);
-            BeamApian apian = new BeamApianTrusty(bgn, gameInst);
-            bgn.Init(apian);
-            fe.SetGameInstance(gameInst);
-            core.SetGameInstance(gameInst);
+            core = new BeamCore(bgn, fe);
             core.Start(settings.startMode);
         }
 
@@ -154,7 +149,6 @@ namespace BeamCli
             float frameSecs = (float)frameMs / 1000f;
             bgn.Loop();
             fe.Loop(frameSecs);
-            //return gameInst.Loop(frameSecs);
             return core.Loop(frameSecs);
         }
 
