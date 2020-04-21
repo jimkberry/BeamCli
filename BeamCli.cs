@@ -5,7 +5,7 @@ using CommandLine;
 using BeamBackend;
 using UniLog;
 
-namespace BeamCli 
+namespace BeamCli
 {
     class Program
     {
@@ -13,33 +13,33 @@ namespace BeamCli
         {
             [Option(
 	            Default = null,
-	            HelpText = "Join this game. Else create a game")]            
-            public string GameId {get; set;}  
+	            HelpText = "Join this game. Else create a game")]
+            public string GameId {get; set;}
 
             [Option(
 	            Default = -1,
-	            HelpText = "(persistent) Start with this GameMode")]            
-            public int StartMode {get; set;}  
+	            HelpText = "(persistent) Start with this GameMode")]
+            public int StartMode {get; set;}
 
             [Option(
 	            Default = null,
-	            HelpText = "Local Bike Control Type (ai, player)")]            
+	            HelpText = "Local Bike Control Type (ai, player)")]
             public string BikeCtrl {get; set;}
 
             [Option(
 	            Default = null,
-	            HelpText = "User settings basename (Default: beamsettings)")]            
-            public string Settings {get; set;}  
+	            HelpText = "User settings basename (Default: beamsettings)")]
+            public string Settings {get; set;}
 
             [Option(
 	            Default = false,
-	            HelpText = "Force default user settings (other than CLI options")]            
-            public bool ForceDefaultSettings {get; set;}     
+	            HelpText = "Force default user settings (other than CLI options")]
+            public bool ForceDefaultSettings {get; set;}
 
             [Option(
 	            Default = false,
-	            HelpText = "Raise exception on Unilog error")]            
-            public bool ThrowOnError {get; set;}                                   
+	            HelpText = "Raise exception on Unilog error")]
+            public bool ThrowOnError {get; set;}
         }
 
         protected static BeamUserSettings GetSettings(string[] args)
@@ -56,13 +56,13 @@ namespace BeamCli
                             settings = BeamUserSettings.CreateDefault();
 
                         if (o.ThrowOnError)
-                            UniLogger.defaultThrowOnError = true;
+                            UniLogger.DefaultThrowOnError = true;
 
                         if (o.GameId != null)
-                            settings.tempSettings["gameId"] = o.GameId;  
+                            settings.tempSettings["gameId"] = o.GameId;
 
                        if (o.StartMode != -1)
-                            settings.startMode = o.StartMode;       
+                            settings.startMode = o.StartMode;
 
                         // TODO: would rather have the frontend implmentation determine this somehow
                         if (o.BikeCtrl != null)
@@ -75,7 +75,7 @@ namespace BeamCli
         }
 
         static void Main(string[] args)
-        {          
+        {
             BeamUserSettings settings = GetSettings(args);
             UniLogger.SetupLevels(settings.debugLevels);
             CliDriver drv = new CliDriver();
@@ -85,9 +85,10 @@ namespace BeamCli
 
 
     class CliDriver
-    { 
+    {
         public long targetFrameMs {get; private set;} = 16;
 
+        public BeamCore core = null;
         public BeamGameInstance gameInst = null;
         public BeamCliFrontend fe = null;
         public BeamGameNet bgn = null;
@@ -100,18 +101,20 @@ namespace BeamCli
         protected void Init(BeamUserSettings settings)
         {
             fe = new BeamCliFrontend(settings);
-            bgn = new BeamGameNet(); // TODO: config/settings?            
-            gameInst = new BeamGameInstance(fe, bgn);
+            bgn = new BeamGameNet(); // TODO: config/settings?
+            core = new BeamCore(bgn);
+            gameInst = new BeamGameInstance(fe);
             BeamApian apian = new BeamApianTrusty(bgn, gameInst);
-            bgn.Init(apian); 
-            fe.SetBackend(gameInst);
-            gameInst.Start(settings.startMode);
+            bgn.Init(apian);
+            fe.SetGameInstance(gameInst);
+            core.SetGameInstance(gameInst);
+            core.Start(settings.startMode);
         }
 
         protected void LoopUntilDone()
         {
             bool keepRunning = true;
-            long frameStartMs = _TimeMs() - targetFrameMs;;              
+            long frameStartMs = _TimeMs() - targetFrameMs;;
             while (keepRunning)
             {
                 long prevFrameStartMs = frameStartMs;
@@ -137,21 +140,22 @@ namespace BeamCli
             //     cmd = self.netCmdQueue.get(block=False)
             //     if cmd:
             //         self._dispatch_net_cmd(cmd)
-            //         ge_sleep(0)  # yield         
+            //         ge_sleep(0)  # yield
 
 
             // while not self.feMsgQueue.empty():
             //     cmd = self.feMsgQueue.get(block=False)
             //     if cmd:
             //         self._dispatch_fe_cmd(cmd)
-            //         ge_sleep(0)  # yield                           
+            //         ge_sleep(0)  # yield
 
             // then update the game
 
-            float frameSecs = (float)frameMs / 1000f;    
+            float frameSecs = (float)frameMs / 1000f;
             bgn.Loop();
             fe.Loop(frameSecs);
-            return gameInst.Loop(frameSecs);
+            //return gameInst.Loop(frameSecs);
+            return core.Loop(frameSecs);
         }
 
         private long _TimeMs() =>  DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
