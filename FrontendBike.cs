@@ -14,7 +14,7 @@ namespace BeamCli
             {
             case BikeFactory.LocalPlayerCtrl:
                 feb = new PlayerBike();
-                break;                
+                break;
             case BikeFactory.AiCtrl:
                 feb = new AiBike();
                 break;
@@ -35,21 +35,21 @@ namespace BeamCli
         };
 
         public IBike bb = null;
-        protected IBeamBackend be = null; 
+        protected IBeamGameInstance be = null;
         protected IBikeControl control = null;
-        protected abstract void CreateControl();      
+        protected abstract void CreateControl();
 
-        public virtual void Setup(IBike beBike, IBeamBackend backend)
-        {           
+        public virtual void Setup(IBike beBike, IBeamGameInstance backend)
+        {
             be = backend;
             bb = beBike;
-            CreateControl();        
-            control.Setup(beBike, backend);  
-        }     
+            CreateControl();
+            control.Setup(beBike, backend);
+        }
 
         public virtual void Loop(float frameSecs)
         {
-            control.Loop(frameSecs);            
+            control.Loop(frameSecs);
         }
 
     }
@@ -58,25 +58,25 @@ namespace BeamCli
     {
         protected override void CreateControl()
         {
-            Debug.Log(string.Format("AiBike.CreateControl()"));        
+            Debug.Log(string.Format("AiBike.CreateControl()"));
             control = new AiControl();
-        }        
+        }
     }
     public class PlayerBike : FrontendBike
     {
         protected override void CreateControl()
         {
-            Debug.Log(string.Format("PlayerBike.CreateControl()"));        
+            Debug.Log(string.Format("PlayerBike.CreateControl()"));
             control = new PlayerControl();
-        }        
-    }    
+        }
+    }
 
     public class RemoteBike : FrontendBike
     {
         protected override void CreateControl()
         {
-            Debug.Log(string.Format("PlayerBike.RemoteBike()"));        
+            Debug.Log(string.Format("PlayerBike.RemoteBike()"));
             control = new RemoteControl();
-        }        
-    }     
+        }
+    }
 }

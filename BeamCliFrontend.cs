@@ -15,7 +15,7 @@ namespace BeamCli
     public class BeamCliFrontend : IBeamFrontend
     {
         public  Dictionary<string, FrontendBike> feBikes;
-        public IBeamBackend backend;
+        public IBeamGameInstance backend;
         protected BeamCliModeHelper _feModeHelper;
         protected BeamUserSettings userSettings;
         public UniLogger logger;
@@ -29,11 +29,14 @@ namespace BeamCli
             logger = UniLogger.GetLogger("Frontend");
         }
 
-        public void SetGameInstance(IBeamBackend back)
+        public void SetGameInstance(IBeamGameInstance back)
         {
             backend = back;
-            back.PeerJoinedGameEvt += OnPeerJoinedGameEvt;
-            back.PeerLeftGameEvt += OnPeerLeftGameEvt;
+            if (back == null)
+                return;
+
+ ///           back.PeerJoinedGameEvt += OnPeerJoinedGameEvt;
+///            back.PeerLeftGameEvt += OnPeerLeftGameEvt;
             back.PeersClearedEvt += OnPeersClearedEvt;
             back.NewBikeEvt += OnNewBikeEvt;
             back.BikeRemovedEvt += OnBikeRemovedEvt;
@@ -67,10 +70,11 @@ namespace BeamCli
         public void OnEndMode(int modeId, object param) => _feModeHelper.OnEndMode(modeId, param);
 
         // Players
+
         public void OnPeerJoinedGameEvt(object sender, PeerJoinedGameArgs args)
         {
-            BeamPeer p = args.peer;
-            logger.Info($"OnPeerJoinedEvt() name: {p.Name}, Id: {p.PeerId}");
+        ///     BeamGroupMember p = args.peer;
+        ///     logger.Info($"OnPeerJoinedEvt() name: {p.Name}, Id: {p.PeerId}");
         }
 
         public void OnPeerLeftGameEvt(object sender, PeerLeftGameArgs args)
