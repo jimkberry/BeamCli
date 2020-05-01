@@ -138,8 +138,9 @@ namespace BeamCli
 
         public void OnReadyToPlay(object sender, EventArgs e)
         {
-           logger.Info($"OnReadyToPlay()");
-           backend.OnSwitchModeReq(BeamModeFactory.kPlay, null);
+            logger.Error($"OnReadyToPlay() - doesn't work anymore");
+            //logger.Info($"OnReadyToPlay()");
+            //&&& backend.OnSwitchModeReq(BeamModeFactory.kPlay, null);
         }
 
     }
