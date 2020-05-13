@@ -37,7 +37,7 @@ namespace BeamCli
 
  ///           back.PeerJoinedGameEvt += OnPeerJoinedGameEvt;
 ///            back.PeerLeftGameEvt += OnPeerLeftGameEvt;
-            back.MembersClearedEvt += OnMembersClearedEvt;
+            back.PlayersClearedEvt += OnPlayersClearedEvt;
             back.NewBikeEvt += OnNewBikeEvt;
             back.BikeRemovedEvt += OnBikeRemovedEvt;
             back.BikesClearedEvt +=OnBikesClearedEvt;
@@ -82,7 +82,7 @@ namespace BeamCli
             logger.Info($"OnPeerLeftEvt(): {args.p2pId}");
         }
 
-        public void OnMembersClearedEvt(object sender, EventArgs e)
+        public void OnPlayersClearedEvt(object sender, EventArgs e)
         {
             // Probably never will do anything
             logger.Verbose("OnClearPeers() currently does nothing");
