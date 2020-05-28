@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using CommandLine;
-using Apian;
 using BeamBackend;
 using UniLog;
 
@@ -38,6 +37,11 @@ namespace BeamCli
             public bool ForceDefaultSettings {get; set;}
 
             [Option(
+	            Default = null,
+	            HelpText = "(Default: Warn) Default log level.")]
+            public string DefLogLvl {get; set;}
+
+            [Option(
 	            Default = false,
 	            HelpText = "Raise exception on Unilog error")]
             public bool ThrowOnError {get; set;}
@@ -59,6 +63,9 @@ namespace BeamCli
                         if (o.ThrowOnError)
                             UniLogger.DefaultThrowOnError = true;
 
+                        if (o.DefLogLvl != null)
+                            settings.defaultLogLevel = o.DefLogLvl;
+
                         if (o.GameId != null)
                             settings.tempSettings["gameId"] = o.GameId;
 
@@ -78,7 +85,8 @@ namespace BeamCli
         static void Main(string[] args)
         {
             BeamUserSettings settings = GetSettings(args);
-            UniLogger.SetupLevels(settings.debugLevels);
+            UniLogger.DefaultLevel = UniLogger.LevelFromName(settings.defaultLogLevel);
+            UniLogger.SetupLevels(settings.logLevels);
             CliDriver drv = new CliDriver();
             drv.Run(settings);
         }
