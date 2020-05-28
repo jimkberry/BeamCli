@@ -1,4 +1,5 @@
 using System;
+using UniLog;
 using UnityEngine;
 using BeamBackend;
 using BikeControl;
@@ -39,8 +40,11 @@ namespace BeamCli
         protected IBikeControl control = null;
         protected abstract void CreateControl();
 
+        public UniLogger Logger;
+
         public virtual void Setup(IBike beBike, IBeamGameInstance backend)
         {
+            Logger = UniLogger.GetLogger("Frontend");  // use the FE logger
             be = backend;
             bb = beBike;
             CreateControl();
@@ -58,7 +62,7 @@ namespace BeamCli
     {
         protected override void CreateControl()
         {
-            Debug.Log(string.Format("AiBike.CreateControl()"));
+            Logger.Verbose($"AiBike.CreateControl()");
             control = new AiControl();
         }
     }
@@ -66,7 +70,7 @@ namespace BeamCli
     {
         protected override void CreateControl()
         {
-            Debug.Log(string.Format("PlayerBike.CreateControl()"));
+            Logger.Verbose($"PlayerBike.CreateControl()");
             control = new PlayerControl();
         }
     }
@@ -75,7 +79,7 @@ namespace BeamCli
     {
         protected override void CreateControl()
         {
-            Debug.Log(string.Format("PlayerBike.RemoteBike()"));
+            Logger.Verbose($"PlayerBike.RemoteBike()");
             control = new RemoteControl();
         }
     }
