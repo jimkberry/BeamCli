@@ -47,9 +47,9 @@ namespace BeamCli
             back.ReadyToPlayEvt += OnReadyToPlay;
 
             // TODO: Maybe move these to IBackend and add a Raise[Foo]Evt method?
-            back.GetGround().PlaceFreedEvt += OnPlaceFreedEvt;
-            back.GetGround().PlacesClearedEvt += OnPlacesClearedEvt;
-            back.GetGround().SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
+            back.GameData.PlaceFreedEvt += OnPlaceFreedEvt;
+            back.GameData.PlacesClearedEvt += OnPlacesClearedEvt;
+            back.GameData.SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
         }
 
         public virtual void Loop(float frameSecs)
@@ -112,21 +112,29 @@ namespace BeamCli
 
         public void OnPlaceHitEvt(object sender, PlaceHitArgs args)
         {
+            // This intentionally accesses linked data to show issues
+            IBike bike = args.ib;
+            string bikeOwner = bike.peerId;
+
+            BeamPlace place = args.p;
+            IBike createdBy = place.bike;
+            string placeOwner = createdBy.peerId;
+
             logger.Info($"OnPlaceHitEvt. Place: ({args.p.xIdx}, {args.p.zIdx})  Bike: {args.ib.bikeId}");
         }
 
-        public void OnPlaceClaimedEvt(object sender, Ground.Place p)
+        public void OnPlaceClaimedEvt(object sender, BeamPlace p)
         {
             logger.Verbose($"OnPlaceClaimedEvt. Pos: ({p.xIdx}, {p.zIdx})  Bike: {p.bike.bikeId}");
         }
 
         // Ground
-        public void OnSetupPlaceMarkerEvt(object sender, Ground.Place p)
+        public void OnSetupPlaceMarkerEvt(object sender, BeamPlace p)
         {
             logger.Debug($"OnSetupPlaceMarkerEvt({p.xIdx}, {p.zIdx})");
         }
 
-        public void OnPlaceFreedEvt(object sender, Ground.Place p)
+        public void OnPlaceFreedEvt(object sender, BeamPlace p)
         {
             logger.Debug($"OnFreePlace({p.xIdx}, {p.zIdx})");
         }
