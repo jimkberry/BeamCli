@@ -92,7 +92,7 @@ namespace BeamCli
         public void OnNewBikeEvt(object sender, IBike ib)
         {
             logger.Info($"OnNewBikeEvt(). Id: {ib.bikeId}, Local: {ib.peerId == backend.LocalPeerId}, AI: {ib.ctrlType == BikeFactory.AiCtrl}");
-            FrontendBike b = FeBikeFactory.Create(ib);
+            FrontendBike b = FeBikeFactory.Create(ib, ib.peerId == backend.LocalPeerId);
             b.Setup(ib, backend);
             feBikes[ib.bikeId] = b;
         }

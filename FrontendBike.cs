@@ -8,21 +8,24 @@ namespace BeamCli
 {
     public static class FeBikeFactory
     {
-        public static FrontendBike Create(IBike ib)
+        public static FrontendBike Create(IBike ib, bool isLocal)
         {
             FrontendBike feb = null;
-            switch (ib.ctrlType)
+            if (isLocal)
             {
-            case BikeFactory.LocalPlayerCtrl:
-                feb = new PlayerBike();
-                break;
-            case BikeFactory.AiCtrl:
-                feb = new AiBike();
-                break;
-            case BikeFactory.RemoteCtrl:
-                feb = new RemoteBike();
-                break;
+                switch (ib.ctrlType)
+                {
+                case BikeFactory.LocalPlayerCtrl:
+                    feb = new PlayerBike();
+                    break;
+                case BikeFactory.AiCtrl:
+                    feb = new AiBike();
+                    break;
+                }
             }
+            else
+                feb = new RemoteBike();
+
             return feb;
         }
     }
