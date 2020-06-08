@@ -113,15 +113,15 @@ namespace BeamCli
         public void OnPlaceHitEvt(object sender, PlaceHitArgs args)
         {
             // This intentionally accesses linked data to show issues
-            IBike bike = args.ib;
-            string bikeOwner = bike.peerId;
+            // IBike bike = args.ib;
+            // string bikeOwner = bike.peerId;
 
-            BeamPlace place = args.p;
-            IBike createdBy = place.bike;  // TODO: CRASH happens here. When no longer useful make it bulletproof
-                                           // (would rather make it not happen - not sure if that's possible)
-            string placeOwner = createdBy.peerId;
+            // BeamPlace place = args.p;
+            // IBike createdBy = place.bike;  // TODO: CRASH happens here. When no longer useful make it bulletproof
+            //                                // (would rather make it not happen - not sure if that's possible)
+            // string placeOwner = createdBy.peerId;
 
-            logger.Info($"OnPlaceHitEvt. Place: ({args.p.xIdx}, {args.p.zIdx})  Bike: {args.ib.bikeId}");
+            logger.Info($"OnPlaceHitEvt. Place: ({args.p?.xIdx}, {args.p?.zIdx})  Bike: {args.ib?.bikeId}");
         }
 
         public void OnPlaceClaimedEvt(object sender, BeamPlace p)
