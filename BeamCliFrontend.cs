@@ -121,12 +121,12 @@ namespace BeamCli
             //                                // (would rather make it not happen - not sure if that's possible)
             // string placeOwner = createdBy.peerId;
 
-            logger.Info($"OnPlaceHitEvt. Place: ({args.p?.xIdx}, {args.p?.zIdx})  Bike: {args.ib?.bikeId}");
+            logger.Info($"OnPlaceHitEvt. Place: {args.p?.GetPos().ToString()}  Bike: {args.ib?.bikeId}");
         }
 
         public void OnPlaceClaimedEvt(object sender, BeamPlace p)
         {
-            logger.Verbose($"OnPlaceClaimedEvt. Pos: ({p.xIdx}, {p.zIdx})  Bike: {p.bike.bikeId}");
+            logger.Verbose($"OnPlaceClaimedEvt. Pos: {p?.GetPos().ToString()} Bike: {p.bike.bikeId}");
         }
 
         // Ground
