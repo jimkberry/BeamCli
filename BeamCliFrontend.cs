@@ -46,7 +46,6 @@ namespace BeamCli
 
             back.ReadyToPlayEvt += OnReadyToPlay;
 
-            // TODO: Maybe move these to IBackend and add a Raise[Foo]Evt method?
             back.GameData.PlaceFreedEvt += OnPlaceFreedEvt;
             back.GameData.PlacesClearedEvt += OnPlacesClearedEvt;
             back.GameData.SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
