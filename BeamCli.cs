@@ -97,7 +97,7 @@ namespace BeamCli
     {
         public long targetFrameMs {get; private set;} = 16;
 
-        public BeamCore core = null;
+        public BeamApplication core = null;
 
         public BeamCliFrontend fe = null;
         public BeamGameNet bgn = null;
@@ -111,7 +111,7 @@ namespace BeamCli
         {
             fe = new BeamCliFrontend(settings);
             bgn = new BeamGameNet(); // TODO: config/settings?
-            core = new BeamCore(bgn, fe);
+            core = new BeamApplication(bgn, fe);
             core.Start(settings.startMode);
         }
 
