@@ -15,7 +15,7 @@ namespace BeamCli
     public class BeamCliFrontend : IBeamFrontend
     {
         public  Dictionary<string, FrontendBike> feBikes;
-        public IBeamGameInstance backend;
+        public IBeamAppCore backend;
         protected BeamCliModeHelper _feModeHelper;
         protected BeamUserSettings userSettings;
         public UniLogger logger;
@@ -29,7 +29,7 @@ namespace BeamCli
             logger = UniLogger.GetLogger("Frontend");
         }
 
-        public void SetGameInstance(IBeamGameInstance back)
+        public void SetAppCore(IBeamAppCore back)
         {
             backend = back;
             if (back == null)

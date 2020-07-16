@@ -97,7 +97,7 @@ namespace BeamCli
     {
         public long targetFrameMs {get; private set;} = 16;
 
-        public BeamApplication core = null;
+        public BeamApplication appl = null;
 
         public BeamCliFrontend fe = null;
         public BeamGameNet bgn = null;
@@ -111,8 +111,8 @@ namespace BeamCli
         {
             fe = new BeamCliFrontend(settings);
             bgn = new BeamGameNet(); // TODO: config/settings?
-            core = new BeamApplication(bgn, fe);
-            core.Start(settings.startMode);
+            appl = new BeamApplication(bgn, fe);
+            appl.Start(settings.startMode);
         }
 
         protected void LoopUntilDone()
@@ -158,7 +158,7 @@ namespace BeamCli
             float frameSecs = (float)frameMs / 1000f;
             bgn.Loop();
             fe.Loop(frameSecs);
-            return core.Loop(frameSecs);
+            return appl.Loop(frameSecs);
         }
 
         private long _TimeMs() =>  DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;

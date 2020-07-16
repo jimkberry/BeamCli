@@ -39,19 +39,19 @@ namespace BeamCli
         };
 
         public IBike bb = null;
-        protected IBeamGameInstance be = null;
+        protected IBeamAppCore appCore = null;
         protected IBikeControl control = null;
         protected abstract void CreateControl();
 
         public UniLogger Logger;
 
-        public virtual void Setup(IBike beBike, IBeamGameInstance backend)
+        public virtual void Setup(IBike beBike, IBeamAppCore core)
         {
             Logger = UniLogger.GetLogger("Frontend");  // use the FE logger
-            be = backend;
+            appCore = core;
             bb = beBike;
             CreateControl();
-            control.Setup(beBike, backend);
+            control.Setup(beBike, core);
         }
 
         public virtual void Loop(float frameSecs)
