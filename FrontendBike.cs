@@ -54,9 +54,9 @@ namespace BeamCli
             control.Setup(beBike, core);
         }
 
-        public virtual void Loop(float frameSecs)
+        public virtual void Loop(long curTime, int frameMs)
         {
-            control.Loop(frameSecs);
+            control.Loop(curTime, frameMs);
         }
 
     }

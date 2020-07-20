@@ -20,6 +20,8 @@ namespace BeamCli
         protected BeamUserSettings userSettings;
         public UniLogger logger;
 
+        private long prevGameTime = 0;
+
         // Start is called before the first frame update
         public BeamCliFrontend(BeamUserSettings startupSettings)
         {
@@ -46,16 +48,26 @@ namespace BeamCli
 
             back.ReadyToPlayEvt += OnReadyToPlay;
 
-            back.GameData.PlaceFreedEvt += OnPlaceFreedEvt;
-            back.GameData.PlacesClearedEvt += OnPlacesClearedEvt;
-            back.GameData.SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
+            back.CoreData.PlaceFreedEvt += OnPlaceFreedEvt;
+            back.CoreData.PlacesClearedEvt += OnPlacesClearedEvt;
+            back.CoreData.SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
         }
 
         public virtual void Loop(float frameSecs)
         {
-            foreach( FrontendBike bike in feBikes.Values)
+            if (backend == null)
+                return;
+
+            long curGameTime = backend.CurrentRunningGameTime;
+            int frameMs = (int)(curGameTime - prevGameTime);
+            prevGameTime = curGameTime;
+
+            if (frameMs > 0 && prevGameTime > 0) // not first loop
             {
-                bike.Loop(frameSecs);
+                foreach( FrontendBike bike in feBikes.Values)
+                {
+                    bike.Loop(curGameTime, frameMs);
+                }
             }
         }
 
