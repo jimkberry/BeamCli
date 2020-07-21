@@ -37,8 +37,9 @@ namespace BeamCli
             if (back == null)
                 return;
 
- ///           back.PeerJoinedGameEvt += OnPeerJoinedGameEvt;
-///            back.PeerLeftGameEvt += OnPeerLeftGameEvt;
+            OnNewCoreState(null, back.CoreData); // initialize
+
+            back.NewCoreStateEvt += OnNewCoreState;
             back.PlayersClearedEvt += OnPlayersClearedEvt;
             back.NewBikeEvt += OnNewBikeEvt;
             back.BikeRemovedEvt += OnBikeRemovedEvt;
@@ -48,9 +49,6 @@ namespace BeamCli
 
             back.ReadyToPlayEvt += OnReadyToPlay;
 
-            back.CoreData.PlaceFreedEvt += OnPlaceFreedEvt;
-            back.CoreData.PlacesClearedEvt += OnPlacesClearedEvt;
-            back.CoreData.SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
         }
 
         public virtual void Loop(float frameSecs)
@@ -79,6 +77,14 @@ namespace BeamCli
         // Backend game modes
         public void OnStartMode(int modeId, object param) =>  _feModeHelper.OnStartMode(modeId, param);
         public void OnEndMode(int modeId, object param) => _feModeHelper.OnEndMode(modeId, param);
+
+        public void OnNewCoreState(object sender, BeamCoreState newCoreState)
+        {
+            newCoreState.PlaceFreedEvt += OnPlaceFreedEvt;
+            newCoreState.PlacesClearedEvt += OnPlacesClearedEvt;
+            newCoreState.SetupPlaceMarkerEvt += OnSetupPlaceMarkerEvt;
+        }
+
 
         // Players
 
